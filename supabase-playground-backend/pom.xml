@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>supabase-spring-boot</artifactId>
+    <artifactId>supabase-playground-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>supabase-playground-backend</name>
     <description>Spring Boot backend with Supabase authentication</description>
