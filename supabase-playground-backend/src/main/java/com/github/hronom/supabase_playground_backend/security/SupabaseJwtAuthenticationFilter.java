@@ -5,55 +5,57 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
-public class SupabaseJwtAuthenticationFilter extends OncePerRequestFilter {
-
-    private final AuthenticationManager authenticationManager;
+public class SupabaseJwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public SupabaseJwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+        // Apply to all requests
+        super(request -> true);
+        setAuthenticationManager(authenticationManager);
     }
 
     @Override
-    protected void doFilterInternal(
+    public Authentication attemptAuthentication(
             HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-
-        String token = getTokenFromRequest(request);
+            HttpServletResponse response
+    ) throws AuthenticationException {
+        // Extract the token from the Authorization header
+        String token = null;
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            token = bearerToken.substring(7);
+        }
 
         if (StringUtils.hasText(token)) {
-            try {
-                SupabaseJwtAuthenticationToken authRequest = new SupabaseJwtAuthenticationToken(token);
-                Authentication authentication = authenticationManager.authenticate(authRequest);
+            // Create an unauthenticated SupabaseJwtAuthenticationToken with the token
+            SupabaseJwtAuthenticationToken authRequest = new SupabaseJwtAuthenticationToken(token);
 
-                if (authentication != null && authentication.isAuthenticated()) {
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } catch (Exception e) {
-                logger.error("Could not authenticate with Supabase JWT token", e);
-            }
+            // Delegate authentication to the AuthenticationManager
+            return getAuthenticationManager().authenticate(authRequest);
+
+        } else {
+            throw new InsufficientAuthenticationException("No Supabase ID token found in request headers.");
         }
-
-        filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-
-        return null;
+    @Override
+    protected void successfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain,
+            Authentication authResult
+    ) throws IOException, ServletException {
+        // Set the authentication in the security context
+        SecurityContextHolder.getContext().setAuthentication(authResult);
+        // Proceed with the next filter in the chain
+        chain.doFilter(request, response);
     }
 }

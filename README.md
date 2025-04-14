@@ -32,7 +32,7 @@ This project demonstrates how to integrate Supabase authentication with a Vue.js
    - Create OAuth credentials in Google Cloud Console
    - Configure redirect URL: `https://[YOUR_PROJECT_ID].supabase.co/auth/v1/callback`
 4. Note down your Supabase URL and anon key
-5. Get your JWT secret from Project Settings > API > JWT Settings
+5. Get your JWT secret from Project Settings > Data API > JWT Settings
 
 ### Frontend Setup
 

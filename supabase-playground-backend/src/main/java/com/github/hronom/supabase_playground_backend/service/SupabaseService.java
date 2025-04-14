@@ -1,15 +1,15 @@
 package com.github.hronom.supabase_playground_backend.service;
 
-import com.github.hronom.supabase_playground_backend.model.SupabaseUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.hronom.supabase_playground_backend.model.SupabaseUser;
+import com.github.hronom.supabase_playground_backend.properties.SupabaseProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,20 +27,16 @@ import java.util.Map;
 @Service
 @Slf4j
 public class SupabaseService {
-
-    @Value("${supabase.url}")
-    private String supabaseUrl;
-
-    @Value("${supabase.key}")
-    private String supabaseKey;
-
-    @Value("${supabase.jwt.secret}")
-    private String jwtSecret;
-
+    private final SupabaseProperties supabaseProperties;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    public SupabaseService(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public SupabaseService(
+            SupabaseProperties supabaseProperties,
+            RestTemplate restTemplate,
+            ObjectMapper objectMapper
+    ) {
+        this.supabaseProperties = supabaseProperties;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
@@ -57,7 +53,8 @@ public class SupabaseService {
             // Decode the JWT token
             SecretKey key = Keys.hmacShaKeyFor(getDecodedSecret());
 
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
+            Jws<Claims> claimsJws = Jwts
+                    .parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
@@ -98,7 +95,7 @@ public class SupabaseService {
     /**
      * Registers a new user in Supabase
      *
-     * @param email The user's email
+     * @param email    The user's email
      * @param password The user's password
      * @return The newly created user
      */
@@ -106,7 +103,7 @@ public class SupabaseService {
         try {
             // Set up headers for Supabase API request
             HttpHeaders headers = new HttpHeaders();
-            headers.set("apikey", supabaseKey);
+            headers.set("apikey", supabaseProperties.getKey());
             headers.set("Content-Type", "application/json");
 
             // Create request body
@@ -117,7 +114,7 @@ public class SupabaseService {
             // Make API request to Supabase Auth API
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
             ResponseEntity<String> response = restTemplate.exchange(
-                    supabaseUrl + "/auth/v1/signup",
+                    supabaseProperties.getUrl() + "/auth/v1/signup",
                     HttpMethod.POST,
                     requestEntity,
                     String.class
@@ -149,6 +146,6 @@ public class SupabaseService {
      * @return The decoded secret as a byte array
      */
     private byte[] getDecodedSecret() {
-        return Base64.getDecoder().decode(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        return supabaseProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8);
     }
 }

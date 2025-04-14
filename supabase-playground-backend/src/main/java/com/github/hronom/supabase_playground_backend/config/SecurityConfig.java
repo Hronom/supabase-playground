@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -22,20 +24,12 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    private final SupabaseJwtAuthenticationProvider supabaseJwtAuthenticationProvider;
-    private final SupabaseJwtAuthenticationFilter supabaseJwtAuthenticationFilter;
-
-    public SecurityConfig(
-            SupabaseJwtAuthenticationProvider supabaseJwtAuthenticationProvider,
-            SupabaseJwtAuthenticationFilter supabaseJwtAuthenticationFilter
-    ) {
-        this.supabaseJwtAuthenticationProvider = supabaseJwtAuthenticationProvider;
-        this.supabaseJwtAuthenticationFilter = supabaseJwtAuthenticationFilter;
-    }
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuthenticationManager authenticationManager,
+            SupabaseJwtAuthenticationFilter supabaseJwtAuthenticationFilter
+    ) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -51,10 +45,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(
+            HttpSecurity http,
+            SupabaseJwtAuthenticationProvider supabaseJwtAuthenticationProvider
+    ) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(supabaseJwtAuthenticationProvider);
         return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public SupabaseJwtAuthenticationFilter supabaseJwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        SupabaseJwtAuthenticationFilter filter = new SupabaseJwtAuthenticationFilter(authenticationManager);
+        filter.setRequiresAuthenticationRequestMatcher(
+                new OrRequestMatcher(
+                        new AntPathRequestMatcher("/secret/**")
+                )
+        );
+        return filter;
     }
 
     @Bean
