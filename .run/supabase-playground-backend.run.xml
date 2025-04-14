@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="supabase-playground-backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="supabase-playground-backend" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.github.hronom.supabase_playground_backend.SupabasePlaygroundBackendApplication" />
+    <option name="WORKING_DIRECTORY" value="file://supabase-playground-backend" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -28,7 +28,8 @@ public class SecurityConfig {
 
     public SecurityConfig(
             SupabaseJwtAuthenticationProvider supabaseJwtAuthenticationProvider,
-            SupabaseJwtAuthenticationFilter supabaseJwtAuthenticationFilter) {
+            SupabaseJwtAuthenticationFilter supabaseJwtAuthenticationFilter
+    ) {
         this.supabaseJwtAuthenticationProvider = supabaseJwtAuthenticationProvider;
         this.supabaseJwtAuthenticationFilter = supabaseJwtAuthenticationFilter;
     }
