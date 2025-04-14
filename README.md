@@ -36,33 +36,30 @@ This project demonstrates how to integrate Supabase authentication with a Vue.js
 
 ### Frontend Setup
 
-1. Navigate to the frontend directory:
-   ```
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```
+1. Install dependencies:
+   ```shell
+   cd supabase-playground-frontend
    npm install
    ```
 
-3. Create a `.env` file based on `.env.example` and add your Supabase credentials:
+2. Create a `.env` file based on `.env.example` and add your Supabase credentials:
    ```
    VITE_SUPABASE_URL=your-supabase-project-url
    VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
    VITE_API_URL=http://localhost:8080/api
    ```
 
-4. Start the development server:
-   ```
+3. Start the development server:
+   ```shell
+   cd supabase-playground-frontend
    npm run dev
    ```
 
 ### Backend Setup
 
 1. Navigate to the backend directory:
-   ```
-   cd backend
+   ```shell
+   cd supabase-playground-backend
    ```
 
 2. Update `application.properties` with your Supabase credentials:
@@ -73,7 +70,7 @@ This project demonstrates how to integrate Supabase authentication with a Vue.js
    ```
 
 3. Build and run the application:
-   ```
+   ```shell
    mvn spring-boot:run
    ```
 

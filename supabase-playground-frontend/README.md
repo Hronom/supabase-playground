@@ -12,18 +12,18 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Project Setup
 
-```sh
+```shell
 npm install
 ```
 
 ### Compile and Hot-Reload for Development
 
-```sh
+```shell
 npm run dev
 ```
 
 ### Compile and Minify for Production
 
-```sh
+```shell
 npm run build
 ```
