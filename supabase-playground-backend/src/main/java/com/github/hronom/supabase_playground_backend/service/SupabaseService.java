@@ -1,6 +1,6 @@
-package com.example.supabase.service;
+package com.github.hronom.supabase_playground_backend.service;
 
-import com.example.supabase.model.SupabaseUser;
+import com.github.hronom.supabase_playground_backend.model.SupabaseUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -56,30 +56,30 @@ public class SupabaseService {
         try {
             // Decode the JWT token
             SecretKey key = Keys.hmacShaKeyFor(getDecodedSecret());
-            
+
             Jws<Claims> claimsJws = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-            
+
             Claims claims = claimsJws.getBody();
-            
+
             // Extract user information from the token
             String userId = claims.getSubject();
             String email = (String) claims.get("email");
-            
+
             // Extract app_metadata and user_metadata
             Map<String, Object> appMetadata = new HashMap<>();
             Map<String, Object> userMetadata = new HashMap<>();
-            
+
             if (claims.containsKey("app_metadata")) {
                 appMetadata = objectMapper.convertValue(claims.get("app_metadata"), Map.class);
             }
-            
+
             if (claims.containsKey("user_metadata")) {
                 userMetadata = objectMapper.convertValue(claims.get("user_metadata"), Map.class);
             }
-            
+
             // Build and return the user object
             return SupabaseUser.builder()
                     .id(userId)
@@ -108,12 +108,12 @@ public class SupabaseService {
             HttpHeaders headers = new HttpHeaders();
             headers.set("apikey", supabaseKey);
             headers.set("Content-Type", "application/json");
-            
+
             // Create request body
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("email", email);
             requestBody.put("password", password);
-            
+
             // Make API request to Supabase Auth API
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
             ResponseEntity<String> response = restTemplate.exchange(
@@ -122,14 +122,14 @@ public class SupabaseService {
                     requestEntity,
                     String.class
             );
-            
+
             // Parse response
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
-            
+
             // Extract user information
             String userId = jsonNode.path("id").asText();
             String userEmail = jsonNode.path("email").asText();
-            
+
             // Build and return the user object
             return SupabaseUser.builder()
                     .id(userId)

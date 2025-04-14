@@ -1,7 +1,7 @@
-package com.example.supabase.controller;
+package com.github.hronom.supabase_playground_backend.controller;
 
-import com.example.supabase.model.SupabaseUser;
-import com.example.supabase.service.SupabaseService;
+import com.github.hronom.supabase_playground_backend.model.SupabaseUser;
+import com.github.hronom.supabase_playground_backend.service.SupabaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +30,11 @@ public class AuthController {
     public ResponseEntity<SupabaseUser> registerUser(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
-        
+
         if (email == null || password == null) {
             return ResponseEntity.badRequest().build();
         }
-        
+
         try {
             SupabaseUser user = supabaseService.registerUser(email, password);
             return ResponseEntity.ok(user);

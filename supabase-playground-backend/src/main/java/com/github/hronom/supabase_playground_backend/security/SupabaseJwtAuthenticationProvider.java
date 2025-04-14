@@ -1,7 +1,7 @@
-package com.example.supabase.security;
+package com.github.hronom.supabase_playground_backend.security;
 
-import com.example.supabase.model.SupabaseUser;
-import com.example.supabase.service.SupabaseService;
+import com.github.hronom.supabase_playground_backend.model.SupabaseUser;
+import com.github.hronom.supabase_playground_backend.service.SupabaseService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ public class SupabaseJwtAuthenticationProvider implements AuthenticationProvider
         try {
             // Validate the JWT token and extract user information
             SupabaseUser user = supabaseService.validateToken(token);
-            
+
             if (user != null) {
                 // Create an authenticated token with the user as principal
                 return new SupabaseJwtAuthenticationToken(
@@ -37,7 +37,7 @@ public class SupabaseJwtAuthenticationProvider implements AuthenticationProvider
                         Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
                 );
             }
-            
+
             throw new BadCredentialsException("Invalid Supabase JWT token");
         } catch (Exception e) {
             throw new BadCredentialsException("Failed to authenticate with Supabase JWT token", e);

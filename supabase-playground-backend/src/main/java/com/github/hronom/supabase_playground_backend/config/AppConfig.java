@@ -1,4 +1,4 @@
-package com.example.supabase.config;
+package com.github.hronom.supabase_playground_backend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

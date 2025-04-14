@@ -1,7 +1,7 @@
-package com.example.supabase.config;
+package com.github.hronom.supabase_playground_backend.config;
 
-import com.example.supabase.security.SupabaseJwtAuthenticationFilter;
-import com.example.supabase.security.SupabaseJwtAuthenticationProvider;
+import com.github.hronom.supabase_playground_backend.security.SupabaseJwtAuthenticationFilter;
+import com.github.hronom.supabase_playground_backend.security.SupabaseJwtAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,7 +63,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

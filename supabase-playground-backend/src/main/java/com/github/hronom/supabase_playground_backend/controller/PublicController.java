@@ -1,4 +1,4 @@
-package com.example.supabase.controller;
+package com.github.hronom.supabase_playground_backend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class PublicController {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "This is a public endpoint that anyone can access");
         response.put("timestamp", System.currentTimeMillis());
-        
+
         return ResponseEntity.ok(response);
     }
 }

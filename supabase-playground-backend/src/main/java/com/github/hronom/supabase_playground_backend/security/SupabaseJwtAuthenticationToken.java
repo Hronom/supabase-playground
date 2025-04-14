@@ -1,4 +1,4 @@
-package com.example.supabase.security;
+package com.github.hronom.supabase_playground_backend.security;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,4 +1,4 @@
-package com.example.supabase.model;
+package com.github.hronom.supabase_playground_backend.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

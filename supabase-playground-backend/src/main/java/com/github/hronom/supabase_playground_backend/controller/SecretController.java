@@ -1,6 +1,6 @@
-package com.example.supabase.controller;
+package com.github.hronom.supabase_playground_backend.controller;
 
-import com.example.supabase.model.SupabaseUser;
+import com.github.hronom.supabase_playground_backend.model.SupabaseUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,16 +24,16 @@ public class SecretController {
     public ResponseEntity<Map<String, Object>> getSecretData(Authentication authentication) {
         // Get the authenticated user
         SupabaseUser user = (SupabaseUser) authentication.getPrincipal();
-        
+
         log.info("User {} accessed secret endpoint", user.getEmail());
-        
+
         // Create a response with some secret data
         Map<String, Object> response = new HashMap<>();
         response.put("message", "This is a secret message that only authenticated users can see!");
         response.put("userId", user.getId());
         response.put("userEmail", user.getEmail());
         response.put("timestamp", System.currentTimeMillis());
-        
+
         return ResponseEntity.ok(response);
     }
 }
