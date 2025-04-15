@@ -1,3 +1,5 @@
+![Static Badge](https://img.shields.io/badge/vibe_coded-8A2BE2)
+
 # Supabase Integration Example
 
 This project demonstrates how to integrate Supabase authentication with a Vue.js frontend and Spring Boot backend.
